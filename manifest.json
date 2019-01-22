@@ -1,0 +1,15 @@
+{
+	"manifest_version": 2,
+	"name": "Community Test",
+	"description":"Community Tool",
+	"version":"1.0.0",
+	"icons":{"128":"redcircle.png"},
+	"browser_action":{
+		"default_icon": "redcircle.png",
+		"default_popup": "popup.html"
+
+	},
+
+	"permissions":["activeTab"]
+
+}

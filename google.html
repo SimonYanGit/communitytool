@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Barrier Free Washrooms Waterloo</title>
+  <style>
+    html, body, #map {
+          height: 90%;
+          margin: 0px;
+          padding: 0px
+        }
+      #description {
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+      }
+ 
+      #infowindow-content .title {
+        font-weight: bold;
+      }
+ 
+      #infowindow-content {
+        display: none;
+      }
+ 
+      #map #infowindow-content {
+        display: inline;
+      }
+ 
+      .pac-card {
+        margin: 10px 10px 0 0;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        background-color: #fff;
+        font-family: Roboto;
+      }
+ 
+      #pac-container {
+        padding-bottom: 12px;
+        margin-right: 12px;
+      }
+ 
+      .pac-controls {
+        display: inline-block;
+        padding: 5px 11px;
+      }
+ 
+      .pac-controls label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+ 
+      #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 400px;
+      }
+ 
+      #pac-input:focus {
+        border-color: #4d90fe;
+      }
+ 
+      #title {
+        color: #fff;
+        background-color: #4d90fe;
+        font-size: 25px;
+        font-weight: 500;
+        padding: 6px 12px;
+      }
+      #target {
+        width: 345px;
+      }
+  </style>
+ 
+</head>
+<body>
+  <h1>Barrier Free Washrooms Waterloo</h1>
+  <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+  <div id="map"></div>
+  <script>
+    var infoWindow;
+ 
+    function LocationControl(controlDiv, map) {
+ 
+      // Set CSS for the control border.
+      var controlUI = document.createElement('div');
+      controlUI.style.backgroundColor = '#fff';
+      controlUI.style.border = '2px solid #fff';
+      controlUI.style.borderRadius = '3px';
+      controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+      controlUI.style.cursor = 'pointer';
+      controlUI.style.marginBottom = '22px';
+      controlUI.style.textAlign = 'center';
+      controlUI.title = 'Click to find location';
+      controlDiv.appendChild(controlUI);
+ 
+      // Set CSS for the control interior.
+      var controlText = document.createElement('div');
+      controlText.style.color = 'rgb(25,25,25)';
+      controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+      controlText.style.fontSize = '16px';
+      controlText.style.lineHeight = '38px';
+      controlText.style.paddingLeft = '5px';
+      controlText.style.paddingRight = '5px';
+      controlText.innerHTML = 'Current Location';
+      controlUI.appendChild(controlText);
+ 
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                              'Error: The Geolocation service failed.' :
+                              'Error: Your browser doesn\'t support geolocation.');
+        infoWindow.open(map);
+      };
+ 
+      controlUI.addEventListener('click', function() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+ 
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            infoWindow.open(map);
+            map.setCenter(pos);
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+        }
+      }
+      );
+    }
+ 
+    function initMap(){
+ 
+      //Map Options
+      var options = {
+        zoom:14,
+        center:{lat: 43.470558, lng:  -80.543246}
+      }
+ 
+      //Map Variable
+      var map = new google.maps.Map(document.getElementById('map'), options);
+ 
+      infoWindow = new google.maps.InfoWindow;
+ 
+      // Create the DIV to hold the control and call the LocatonControl()
+      // constructor passing in this DIV.
+      var locationControlDiv = document.createElement('div');
+      var locationControl = new LocationControl(locationControlDiv, map);
+ 
+      locationControlDiv.index = 1;
+      map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(locationControlDiv);
+ 
+      //Function to add Marker
+      function addMarker(options){
+        var marker = new google.maps.Marker({
+          position:options.coords,
+          map:map
+        });
+ 
+        if(options.content)
+        {
+          var infoWindow = new google.maps.InfoWindow({
+            content: options.content
+          });
+ 
+          marker.addListener('click', function(){
+            infoWindow.open(map, marker);
+          });
+        }
+      }
+ 
+      //Markers for barrier free washrooms
+      addMarker({
+        coords:{lat: 43.475340,lng: -80.548625},
+        content: '<h1>CIF 1901, 1902</h1>'
+      });
+      addMarker({
+        coords:{lat: 43.473886,lng: -80.545314},
+        content: '<h1>BMH 1665</h1>'
+      });
+      addMarker({
+        coords:{lat: 43.470894,lng:  -80.540292},
+        content: '<h1>E2 3418A</h1>'
+      });
+      addMarker({
+        coords:{lat: 43.471406,lng: -80.540659},
+        content: '<h1>E3 1121, 1122</h1>'
+      });
+      addMarker({
+        coords:{lat: 43.473786,lng: -80.538656},
+        content: '<h1>ECH 2902, 1122</h1>'
+      });
+      addMarker({
+        coords:{lat: 43.47152,lng: -80.541915},
+        content: '<h1>EIT 1906, 2905</h1>'
+      });
+      addMarker({
+        coords:{lat: 43.47142,lng: -80.542791},
+        content: '<h1>ESC 335</h1>'
+      });
+      addMarker({
+        coords:{lat: 43.470660,lng: -80.546060},
+        content: '<h1>HS 1903, 1904, 1919,<BR/> 1921, 2904, 2906</h1>'
+      });
+      addMarker({
+        coords:{lat: 43.47142,lng: -80.542791},
+        content: '<h1>ESC 335</h1>'
+      });
+      addMarker({
+        coords:{lat: 43.470660,lng: -80.546060},
+        content: '<h1>HS 1903, 1904, 1919,<BR/>1921, 2904, 2906</h1>'
+      });
+      addMarker({
+        coords:{lat: 43.475831,lng: -80.545513},
+        content: '<h1>OPT 1032</h1>'
+      });
+      addMarker({
+        coords:{lat: 43.471276,lng: -80.544034},
+        content: '<h1>QNC B917, 1917, 2917,<BR/>3917, 4917, 4943, 5943</h1>'
+      });
+      addMarker({
+        coords:{lat: 43.47025,lng: -80.540706},
+        content: '<h1>RCH 125, 126</h1>'
+      });
+ 
+      // Create the search box and link it to the UI element.
+      var input = document.getElementById('pac-input');
+      var searchBox = new google.maps.places.SearchBox(input);
+      map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+ 
+      // Bias the SearchBox results towards current map's viewport.
+      map.addListener('bounds_changed', function() {
+        searchBox.setBounds(map.getBounds());
+      });
+ 
+      var markers = [];
+      // Listen for the event fired when the user selects a prediction and retrieve
+      // more details for that place.
+      searchBox.addListener('places_changed', function() {
+        var places = searchBox.getPlaces();
+ 
+        if (places.length == 0) {
+          return;
+        }
+ 
+        // Clear out the old markers.
+        markers.forEach(function(marker) {
+          marker.setMap(null);
+        });
+        markers = [];
+ 
+        // For each place, get the icon, name and location.
+        var bounds = new google.maps.LatLngBounds();
+        places.forEach(function(place) {
+          if (!place.geometry) {
+            console.log("Returned place contains no geometry");
+            return;
+          }
+          var icon = {
+            url: place.icon,
+            size: new google.maps.Size(71, 71),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(17, 34),
+            scaledSize: new google.maps.Size(25, 25)
+          };
+ 
+          // Create a marker for each place.
+          markers.push(new google.maps.Marker({
+            map: map,
+            icon: icon,
+            title: place.name,
+            position: place.geometry.location
+          }));
+ 
+          if (place.geometry.viewport) {
+            // Only geocodes have viewport.
+            bounds.union(place.geometry.viewport);
+          } else {
+            bounds.extend(place.geometry.location);
+          }
+        });
+        map.fitBounds(bounds);
+      });
+ 
+      }
+ 
+  </script>
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArjvkZSGqTWWWWPVqj7Kyutjay_4ZVwKE&libraries=places&callback=initMap">
+    </script>
+</body>
+</html>
